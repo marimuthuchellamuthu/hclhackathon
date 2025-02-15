@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    bucket = "your-terraform-state-bucket"
+    bucket = "hcl-hackathon-healthcare"
     key    = "terraform.tfstate"
     region = "us-east-1"
     encrypt = true
-    dynamodb_table = "your-terraform-lock-table"
+    dynamodb_table = "hcl-hackathon-healthcare"
     acl   = "bucket-owner-full-control"
   }
 }
@@ -49,7 +49,7 @@ resource "aws_security_group" "allow_all" {
 
 # ecs
 resource "aws_ecs_cluster" "main" {
-  name = "patient-appointment-cluster"
+  name = "hcl-hackathon-healthcare"
 }
 
 resource "aws_ecs_task_definition" "patient_service" {
@@ -63,7 +63,7 @@ resource "aws_ecs_task_definition" "patient_service" {
 
   container_definitions = jsonencode([{
     name      = "patient-service"
-    image     = "your_ecr_url/patient-service:latest"
+    image     = "539935451710.dkr.ecr.us-east-1.amazonaws.com/hcl-hackathon/healthcare:patient-app"
     portMappings = [
       {
         containerPort = 3000
@@ -71,6 +71,13 @@ resource "aws_ecs_task_definition" "patient_service" {
         protocol      = "tcp"
       }
     ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.patient_service_log_group.name
+        "awslogs-region"        = "us-east-1"
+        "awslogs-stream-prefix" = "patient-service"
+      }
   }])
 }
 
@@ -85,7 +92,7 @@ resource "aws_ecs_task_definition" "appointment_service" {
 
   container_definitions = jsonencode([{
     name      = "appointment-service"
-    image     = "your_ecr_url/appointment-service:latest"
+    image     = "539935451710.dkr.ecr.us-east-1.amazonaws.com/hcl-hackathon/healthcare:appointment-app"
     portMappings = [
       {
         containerPort = 3001
@@ -93,6 +100,13 @@ resource "aws_ecs_task_definition" "appointment_service" {
         protocol      = "tcp"
       }
     ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.patient_service_log_group.name
+        "awslogs-region"        = "us-east-1"
+        "awslogs-stream-prefix" = "appointment-service"
+      }
   }])
 }
 
@@ -164,7 +178,6 @@ resource "aws_iam_role" "ecs_task_role" {
 
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "hcl-hackathon-healthcare"
-  acl    = "private"
 }
 
 resource "aws_dynamodb_table" "terraform_lock" {
