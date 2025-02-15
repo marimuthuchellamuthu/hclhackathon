@@ -43,8 +43,8 @@ resource "aws_ecs_cluster" "healthcare-ecs" {
 
 resource "aws_ecs_task_definition" "patient_service" {
   family                = "patient-service"
-  execution_role_arn    = aws_iam_role.ecs_execution_role.arn
-  task_role_arn         = aws_iam_role.ecs_task_role.arn
+  execution_role_arn    = "arn:aws:iam::539935451710:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
+  task_role_arn         = "arn:aws:iam::539935451710:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
   network_mode          = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                   = "256"
@@ -65,8 +65,8 @@ resource "aws_ecs_task_definition" "patient_service" {
 
 resource "aws_ecs_task_definition" "appointment_service" {
   family                = "appointment-service"
-  execution_role_arn    = aws_iam_role.ecs_execution_role.arn
-  task_role_arn         = aws_iam_role.ecs_task_role.arn
+  execution_role_arn    = "arn:aws:iam::539935451710:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
+  task_role_arn         = "arn:aws:iam::539935451710:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
   network_mode          = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                   = "256"
@@ -87,7 +87,7 @@ resource "aws_ecs_task_definition" "appointment_service" {
 
 resource "aws_ecs_service" "patient_service" {
   name            = "patient-service"
-  cluster         = aws_ecs_cluster.main.id
+  cluster         = healthcare-ecs.patient_service.id
   task_definition = aws_ecs_task_definition.patient_service.arn
   desired_count   = 1
   launch_type     = "FARGATE"
@@ -100,7 +100,7 @@ resource "aws_ecs_service" "patient_service" {
 
 resource "aws_ecs_service" "appointment_service" {
   name            = "appointment-service"
-  cluster         = aws_ecs_cluster.main.id
+  cluster         = healthcare-ecs.appointment_serivce.id
   task_definition = aws_ecs_task_definition.appointment_service.arn
   desired_count   = 1
   launch_type     = "FARGATE"
