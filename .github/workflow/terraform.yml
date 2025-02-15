@@ -20,6 +20,9 @@ jobs:
         with:
           terraform_version: 1.2.3
 
+      - name: Terraform initialization
+        run: terraform init
+
       - name: Terraform fmt
         run: terraform fmt -check
 
