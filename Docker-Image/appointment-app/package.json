@@ -1,0 +1,15 @@
+{
+    "name": "patient-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "appointment-service.js",
+    "scripts": {
+      "start": "node appointment-service.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+  }
