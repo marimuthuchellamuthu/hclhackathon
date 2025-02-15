@@ -1,5 +1,5 @@
-resource "aws_ecs_cluster" "example_cluster" {
-  name = "example-cluster"
+resource "aws_ecs_cluster" "hcl-hackathon-healthcare" {
+  name = "hcl-hackathon-healthcare"
 }
 
 
