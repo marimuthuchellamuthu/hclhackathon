@@ -60,7 +60,7 @@ resource "aws_ecs_task_definition" "patient_service" {
         protocol      = "tcp"
       }
     ]
-])
+    }])
 }
 
 resource "aws_ecs_task_definition" "appointment_service" {
@@ -82,7 +82,7 @@ resource "aws_ecs_task_definition" "appointment_service" {
         protocol      = "tcp"
       }
     ]
-])
+    }])
 }
 
 resource "aws_ecs_service" "patient_service" {
